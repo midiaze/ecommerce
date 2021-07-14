@@ -1,0 +1,8 @@
+.vscode
+__pychache__/
+env/
+json/
+.vscode/
+db.sqlite3
+**/migrations/**
+!**/migrations/__init__.py
