@@ -5,4 +5,5 @@ app_name = "clientes"
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("historial", views.historial, name="historial"),
 ]
