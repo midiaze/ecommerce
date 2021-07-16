@@ -7,7 +7,7 @@ from pathlib import Path
 from django.template.loader import get_template
 import os
 from django.conf import settings
-# from weasyprint import HTML
+from weasyprint import HTML
 from apps.utils import login_required
 
 
@@ -20,18 +20,18 @@ def index(request):
         return render(request, 'home.html', context)
 
 
-# def boleta(request, pedido_id):
-#     pedido = Pedido.objects.get(id=pedido_id)
-#     context={            
-#         'pedido': pedido
-#         }
-#     Path('static/pdf').mkdir(parents=True, exist_ok=True)
-#     nombreArchivo = f'boleta_{pedido.id}'
-#     template = get_template(f'boleta_{pedido.id}.html')
-#     html_template = template.render(context)
-#     pdf_url = os.path.join(settings.BASE_DIR, 'static/pdf/'+nombreArchivo)
-#     HTML(string = html_template).write_pdf(target=f'{pdf_url}.pdf')
-#     return render(request, 'paginas/boleta.html', context)
+def boleta(request, pedido_id):
+    pedido = Pedido.objects.get(id=pedido_id)
+    context={            
+        'pedido': pedido
+        }
+    Path('static/pdf').mkdir(parents=True, exist_ok=True)
+    nombreArchivo = f'boleta_{pedido.id}'
+    template = get_template(f'boleta_{pedido.id}.html')
+    html_template = template.render(context)
+    pdf_url = os.path.join(settings.BASE_DIR, 'static/pdf/'+nombreArchivo)
+    HTML(string = html_template).write_pdf(target=f'{pdf_url}.pdf')
+    return render(request, 'paginas/boleta.html', context)
 
 
 
