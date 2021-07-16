@@ -1,5 +1,5 @@
 .vscode
-__pychache__/
+__pycache__/
 env/
 json/
 .vscode/
@@ -7,3 +7,4 @@ db.sqlite3
 **/migrations/**
 !**/migrations/__init__.py
 
+base.html
