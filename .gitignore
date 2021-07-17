@@ -6,5 +6,4 @@ json/
 db.sqlite3
 **/migrations/**
 !**/migrations/__init__.py
-
-base.html
+.DS_Store
