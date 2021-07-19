@@ -34,7 +34,7 @@ class Usuario(models.Model):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     es_activo = models.BooleanField(default=True)
-    carrito = models.ManyToManyField(Producto, through='pedidos.Carrito')
+    # carrito = models.ManyToManyField(Producto, through='pedidos.Carrito')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
