@@ -9,6 +9,10 @@ class CategoriaForm(forms.ModelForm):
     class Meta:
         model = Categoria
         fields = '__all__'
+
+        error_messages = {
+            'nombre': validar.mensajes_error_por_defecto,
+        }
     
     def clean_nombre(self):
         nombre = self.cleaned_data['nombre']
@@ -20,6 +24,13 @@ class ProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
         fields = '__all__'
+
+        error_messages = {
+            'nombre': validar.mensajes_error_por_defecto,
+            'precio': validar.mensajes_error_por_defecto,
+            'descripcion': validar.mensajes_error_por_defecto,
+            'categoria': validar.mensajes_error_por_defecto,
+        }
     
     def clean_nombre(self):
         nombre = self.cleaned_data['nombre']

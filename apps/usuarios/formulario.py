@@ -10,6 +10,17 @@ class UsuarioForm(forms.ModelForm):
         model = Usuario
         fields = ['nombre', 'direccion', 'email', 'password']
 
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
+    
+        error_messages = {
+            'nombre': validar.mensajes_error_por_defecto,
+            'direccion': validar.mensajes_error_por_defecto,
+            'email': validar.mensajes_error_por_defecto,
+            'password': validar.mensajes_error_por_defecto,
+        }
+
     def clean_nombre(self):
         nombre = self.cleaned_data['nombre']
         validar.longitud("nombre", nombre)
@@ -24,3 +35,5 @@ class UsuarioForm(forms.ModelForm):
         password = self.cleaned_data['password']
         validar.longitud("password", password, minimo=6)
         return password
+    
+    
