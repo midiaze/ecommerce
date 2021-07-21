@@ -15,6 +15,8 @@ def index(request):
     date = datetime.date.today()
     start_week = date - datetime.timedelta(date.weekday())
     end_week = start_week + datetime.timedelta(7)
+    print(f'start_week:{start_week}')
+    print(f'end_week:{end_week}')
 
     #demanda
     year_ago = year - 1
@@ -22,25 +24,25 @@ def index(request):
     day = datetime.datetime.now().day
     date_ago_start = datetime.datetime(year_ago,month,day)
     date_ago_end = date_ago_start + datetime.timedelta(7)
-    print(date_ago_start)
-    print(date_ago_end)
+    print(f'date_ago_start:{date_ago_start}')
+    print(f'date_ago_end:{date_ago_end}')
 
     context = {
         #este mes
-        'ventas_semanales_agregadas' : Compra.objects.filter(created_at__range=[start_week, end_week]).aggregate(Sum('total_compra')),
-        'ventas_anuales_agregadas' : Compra.objects.filter(created_at__range=[first_week, last_week]).aggregate(Sum('total_compra')),
-        'ventas_semanales': Compra.objects.filter(created_at__range=[start_week, end_week]),
+        'ventas_semanales_agregadas' : Order.objects.filter(date_ordered__range=[start_week, end_week]).aggregate(Sum('total')),
+        #'ventas_anuales_agregadas' : Order.objects.filter(date_ordered__range=[first_week, last_week]).aggregate(Sum('total')),
+        'ventas_semanales': Order.objects.filter(date_ordered__range=[start_week, end_week]),
         
         #este año
-        'ventas' : Compra.objects.filter(created_at__year=2021).order_by('created_at'),
-        'productos_vendidos' : Pedido.objects.filter(created_at__range=[first_week, last_week]).values('producto_id').annotate(Sum('cantidad')),
-        'pedidos'  : Pedido.objects.annotate(Count('id')),
+        'ventas' : Order.objects.filter(date_ordered__year=2021).order_by('date_ordered'),
+        'productos_vendidos' : OrderItem.objects.filter(date_ordered__range=[first_week, last_week]).values('product_id').annotate(Sum('quantity')),
+        'pedidos'  : OrderItem.objects.annotate(Count('id')),
         
         #demanda
-        'demanda_hoy': Compra.objects.filter(created_at__range=[first_week, last_week]),
-        'demanda_pasada': Compra.objects.filter(created_at__range=[date_ago_start, date_ago_end]),
+        'demanda_hoy': Order.objects.filter(date_ordered__range=[first_week, last_week]),
+        'demanda_pasada': Order.objects.filter(date_ordered__range=[date_ago_start, date_ago_end]),
         'stock' : Producto.objects.all().order_by('stock'),
-        'frecuencia' : Compra.objects.all(),
-        'data': Compra.objects.all()    
+        'frecuencia' : Order.objects.all(),
+        'data': Order.objects.all()    
     }
     return render(request, 'chart.html', context)
