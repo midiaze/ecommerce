@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse
 from apps.utils import login_dashboard, login_required
 import re
 from django.shortcuts import redirect, render
@@ -6,7 +7,7 @@ from apps.usuarios.models import Usuario
 import bcrypt
 
 # Create your views here.
-def index(request):
+def index(request): ##esta no se va a usar más, después hay que poner pass
     context = {
         'index': "Este es el index de usuarios"
     }
@@ -23,20 +24,23 @@ def registro(request):
             hash1 = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt()).decode()
             nuevo.password = hash1
             nuevo.save()
-            return redirect("usuarios:index")
+            request.session["id"]=nuevo.id
+            if nuevo.id == 1:
+                return redirect("usuarios:restaurante")
+            return redirect("usuarios:dashboard",id_usuario=nuevo.id) #esta redirecciona cuando entra después de registrarse un cliente
     else:
         formulario = UsuarioForm()
     context = {
         'formulario_usuario' : formulario,
     }
-    return render(request, "index_usuarios.html", context)
+    return render(request, "usuarios/registro.html", context)
 
 def login(request):
     if request.method == "GET":
         context = {
             'login': True
         }
-        return render(request,"index_usuarios.html", context)
+        return render(request,"usuarios/login.html", context)
     if request.method == "POST":
         errors = Usuario.objects.validar_ingreso(request.POST)
         if len(errors)>0:
@@ -45,31 +49,32 @@ def login(request):
                 'email': request.POST['email'],
                 'errors': errors,
             }
-            return render(request,"index_usuarios.html", context)
+            return render(request,"usuarios/login.html", context)
         else:
             usuario = Usuario.objects.get(email=request.POST['email'])
             request.session["id"]=usuario.id
-            context = {
-                'usuario': usuario,
-            }
-            return redirect("usuarios:dashboard",id_usuario=usuario.id)
+            if not usuario.super_user:
+                context = {
+                    'usuario': usuario,
+                }
+                return redirect("usuarios:dashboard",id_usuario=usuario.id) #esta redirecciona cuando entra después de login un cliente
+            if usuario.super_user:
+                return redirect("usuarios:restaurante")
 
 def logout(request):
     request.session.clear()
-    return redirect("usuarios:index")
+    return redirect("/")
 
 @login_required
-@login_dashboard
 def dashboard(request, id_usuario):
     usuario = Usuario.objects.get(id=id_usuario)
     context = {
         'dashboard' : True,
         'usuario': usuario,
     }
-    return render(request, "index_usuarios.html", context)
+    return render(request, "index.html", context) #o cambiar solo esta a redirecto de carrito con productos
 
 @login_required
-@login_dashboard
 def perfil(request, id_usuario):
     usuario = Usuario.objects.get(id=id_usuario)
     if request.method == "GET":
@@ -77,7 +82,11 @@ def perfil(request, id_usuario):
             'perfil' : True,
             'usuario': usuario,
         }
-        return render(request, "index_usuarios.html", context)
+        if not usuario.super_user:
+            return render(request, "usuarios/perfil_clientes.html", context)
+        else:
+            print("si estamos aki")
+            return render(request, "restaurante/perfil_restaurante.html", context)
     if request.method == "POST":
         errors = Usuario.objects.validar_editar_usuario(request.POST)
         if usuario.email != request.POST['email']:
@@ -88,16 +97,21 @@ def perfil(request, id_usuario):
                 'usuario': usuario,
                 'errors': errors
             }
-            return render(request, "index_usuarios.html", context)
+            if not usuario.super_user:
+                return render(request, "usuarios/perfil_clientes.html", context)
+            else:
+                return render(request, "restaurante/perfil_restaurante.html", context)
         else:
             usuario.nombre = request.POST['nombre']
             usuario.direccion = request.POST['direccion']
             usuario.email = request.POST['email']
             usuario.save()
-            return redirect("usuarios:dashboard",id_usuario=usuario.id)
+            if not usuario.super_user:
+                return redirect("usuarios:dashboard",id_usuario=usuario.id)
+            else:
+                return redirect("usuarios:restaurante")
 
 @login_required
-@login_dashboard
 def cambiar_pw(request, id_usuario):
     usuario = Usuario.objects.get(id=id_usuario)
     if request.method == "GET":
@@ -105,7 +119,10 @@ def cambiar_pw(request, id_usuario):
             'cambio_pw' : True,
             'usuario': usuario,
         }
-        return render(request, "index_usuarios.html", context)
+        if not usuario.super_user:
+            return render(request, "usuarios/perfil_clientes.html", context)
+        else:
+            return render(request, "restaurante/perfil_restaurante.html", context)
     if request.method == "POST":
         errors = Usuario.objects.validar_cambio_pw(request.POST)
         if not bcrypt.checkpw(request.POST['password'].encode(), usuario.password.encode()):
@@ -116,18 +133,30 @@ def cambiar_pw(request, id_usuario):
                 'usuario': usuario,
                 'errors': errors
             }
-            return render(request, "index_usuarios.html", context)
+            if not usuario.super_user:
+                return render(request, "usuarios/perfil_clientes.html", context)
+            else:
+                return render(request, "restaurante/perfil_restaurante.html", context)
         else:
             hash2 = bcrypt.hashpw(request.POST['nueva_pw'].encode(), bcrypt.gensalt()).decode()
             usuario.password = hash2
             usuario.save()
-            return redirect("usuarios:dashboard",id_usuario=usuario.id)
+            if not usuario.super_user:
+                return redirect("usuarios:dashboard",id_usuario=usuario.id)
+            else:
+                return redirect("usuarios:restaurante")
 
 @login_required
-@login_dashboard
 def inactivar_usuario(request, id_usuario):
     usuario = Usuario.objects.get(id=id_usuario)
     usuario.es_activo = 'False'
     usuario.save()    
     request.session.clear()
-    return redirect("usuarios:index")
+    return redirect("/")
+
+def restaurante(request):
+    usuario = Usuario.objects.get(id=request.session['id'])
+    context = {
+        'usuario': usuario
+    }
+    return render(request, "restaurante/dashboard.html", context) # redirect a la que tenga la tere de reportes

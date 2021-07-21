@@ -9,6 +9,8 @@ from django.template.loader import get_template
 from pathlib import Path
 import os
 from django.conf import settings
+#from weasyprint import HTML
+from apps.utils import login_required
 
 def store(request):
     data = cartData(request)

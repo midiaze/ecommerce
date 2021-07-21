@@ -1,0 +1,24 @@
+{% load static %}
+
+{% block extraEstilos %}
+    <link rel="stylesheet" href='{% static 'master/css/style_admin.css' %}'>
+{% endblock %}
+  
+{% block contenido %}
+<nav>
+  <div class="wrapper">
+    <div class="header">
+      <h3>Bienvenido {{usuario.nombre}}</h3>
+      <div>
+        <a href="{% url 'usuarios:perfil' id_usuario=usuario.id %}">Configuración</a>
+        <a href="{% url 'usuarios:logout' %}">Logout</a>
+      </div>
+    </div>
+    <div class="content">
+      <div class="menu-left">
+        <p>DOJOS PIZZA</p>
+        <li><a href="">Dashboard</a></li>
+        <li><a href="{% url 'productos:crear_producto' %}">Agregar Productos</a></li>
+        <li><a href="{% url 'productos:listado_productos' %}">Ver Productos</a></li>
+      </div>
+{% endblock %}

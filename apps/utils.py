@@ -12,3 +12,13 @@ def login_required(view):
             return redirect('/auth')
 
     return view_envuelta
+
+def login_dashboard(view):
+    def view_envuelta(request, id_usuario):
+        usuario = Usuario.objects.get(id=id_usuario)
+        if usuario.id != request.session['id'] or usuario.es_activo == "False":
+            raise PermissionDenied()
+        else:
+            return view(request, id_usuario)
+    
+    return view_envuelta
