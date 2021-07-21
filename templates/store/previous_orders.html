@@ -13,10 +13,10 @@
     <tbody>
         <tr>
             {% for order in orders %}
-            <th scope="row"><a href="#">{{order.id}}</a></th>
+            <th scope="row">{{order.id}}</a></th>
             <td>${{order.get_cart_total}}</td>
-            <td class='text-center'> <a class='btn btn-primary' href="#">View Voucher</a> <a class='btn btn-success'
-                    href="#">Dowload
+            <td class='text-center'><a class='btn btn-primary' href="/pedidosorder_details/{{order.id}}">View Order</a>
+                <a class='btn btn-success' href="#">Dowload
                     Voucher</a> </td>
         </tr>
         {% endfor %}

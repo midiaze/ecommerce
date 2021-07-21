@@ -44,3 +44,7 @@ def login(request):
             usuario = Usuario.objects.get(email=request.POST['email'])
             request.session["id"]=usuario.id
             return redirect("productos:index")
+    
+def logout(request):
+    request.session.clear()
+    return redirect('pedidos:store')

@@ -1,12 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import json
 import datetime
 from .models import * 
 from .utils import cookieCart, cartData, guestOrder
 from django.views.decorators.csrf import csrf_exempt
-from django.template.loader import get_template
-from pathlib import Path
 import os
 from django.conf import settings
 
@@ -16,8 +14,11 @@ def store(request):
     products = Producto.objects.all()
     context = {
         'products': products,
-        'cartItems':cartItems
+        'cartItems':cartItems,
     }
+    if 'id' in request.session:
+        user=Customer.objects.get(id=request.session['id'])
+        context['customer']=user
     return render(request, 'store/store.html', context)
 
 
@@ -55,10 +56,10 @@ def updateItem(request):
 	data = json.loads(request.body)
 	productId = data['productId']
 	action = data['action']
-	print('Action:', action)
-	print('Product:', productId)
+	# print('Action:', action)
+	# print('Product:', productId)
 
-	customer = request.user.customer
+	customer = Customer.objects.get(id=request.session['id'])
 	product = Producto.objects.get(id=productId)
 	order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
@@ -82,39 +83,58 @@ def processOrder(request):
     transaction_id = datetime.datetime.now().timestamp()
     data = json.loads(request.body)
 
-    if request.user.is_authenticated:
-        customer = request.user.customer
+    if 'id' in request.session:
+        customer = Customer.objects.get(id=request.session['id'])
         order, created = Order.objects.get_or_create(customer=customer, complete = False)
     
     else: 
         customer, order = guestOrder(request, data)
     
-    total = float(data['form']['total'])
+    total = (data['form']['total'])
     order.transaction_id = transaction_id
-    if total == float(order.get_cart_total()):
+    if total == (order.get_cart_total()):
         order.complete = True
+    else: 
+        return JsonResponse('error', safe=False)
     order.save()
-    if order.shipping == True:
-        ShippingAddres.objects.create(
-            customer= customer,
-            order=order,
-            address=data['shipping']['address'],
-            city=data['shipping']['city'],
-            state=data['shipping']['state'],
-            zipcode=data['shipping']['zipcode'],
-        )
+    
+    
     return JsonResponse('Payment complete', safe=False)        
 
 def previous_orders(request):
-    if request.user.is_authenticated:
-        customer = request.user.customer
+    data = cartData(request)
+    cartItems = data['cartItems']
+    if 'id' in request.session:
+        customer = Customer.objects.get(id=request.session['id'])
         print(customer.id)
         orders = Order.objects.filter(customer=customer)
+        # if len(orders) == 0:
+        #     return redirect('/pedidosnone')
+        # else:
         context = {
-            'orders':orders
+            'orders':orders,
+            'cartItems':cartItems
         }
         return render(request, 'store/previous_orders.html', context)
 
+def none(request):
+    data = cartData(request)
+    cartItems = data['cartItems']
+    context = {
+        'cartItems' : cartItems,
+    }
+    return render(request, 'store/none.html', context)
+
+def order_details(request, order_id):
+    data = cartData(request)
+    cartItems = data['cartItems']
+    order = Order.objects.get(id=order_id)
+    orderItems= OrderItem.objects.filter(order=order)
+    context = {
+        'order':order,
+        'items':orderItems,
+    }
+    return render(request, 'store/order_details.html', context)
 
 # def boleta(request, pedido_id):
 #     pedido = Pedido.objects.get(id=pedido_id)

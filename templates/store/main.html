@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'master/css/main.css' %}">
 
     <script type="text/javascript">
-        var user = '{{request.user}}'
+        var user = '{{customer}}'
 
         function getToken(name) {
             var cookieValue = null;
@@ -56,17 +56,17 @@
 
         if (cart == undefined) {
             cart = {}
-            console.log('Cart Created!', cart)
+            // console.log('Cart Created!', cart)
             document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
         }
-        console.log('Cart:', cart)
+        // console.log('Cart:', cart)
     </script>
 </head>
 
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{% url 'store' %}">Ecom</a>
+        <a class="navbar-brand" href="{% url 'pedidos:store' %}">Ecom</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -75,18 +75,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'store' %}">Store <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{% url 'pedidos:store' %}">Store <span
+                            class="sr-only">(current)</span></a>
                 </li>
 
             </ul>
             <div class="form-inline my-2 my-lg-0">
-                {% if request.user.is_authenticated %}
-                <a href="/admin/logout/" class="btn btn-danger">Logout</a>
+                {% if 'id' in request.session %}
+                <a href="/usuarioslogout/" class="btn btn-danger">Logout</a>
                 {% else %}
-                <a href="/admin/" class="btn btn-warning">Login</a>
+                <a href="/usuarioslogin" class="btn btn-warning">Login</a>
                 {% endif %}
 
-                <a href="{% url 'cart' %}">
+                <a href="{% url 'pedidos:cart' %}">
                     <img id="cart-icon" src="{% static 'master/img/cart.png' %}">
                 </a>
                 <p id="cart-total">{{cartItems}}</p>

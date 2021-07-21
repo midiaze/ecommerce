@@ -6,10 +6,12 @@
     <div class="col-lg-4">
         <div class="box-element product">
 
-            <img class="thumbnail" src="{{product.imageURL}}">
             <div class="box-element product">
-                <h6><strong>{{product.nombre}}</strong></h6>
+                <img src="/media/{{product.imagen}}" class="thumbnail">
+
+                <h6 class='mt-1'><strong>{{product.nombre}}</strong></h6>
                 <hr>
+                <h6>{{product.descripcion}}</h6>
 
                 <button data-product={{product.id}} data-action='add'
                     class="btn btn-outline-secondary add-btn update-cart ">Add to Cart</button>
@@ -23,4 +25,4 @@
     </div>
     {% endfor %}
 </div>
-{% endblock %}
+{% endblock content %}

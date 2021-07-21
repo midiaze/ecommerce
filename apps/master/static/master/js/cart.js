@@ -4,10 +4,10 @@ for (i = 0; i < updateBtns.length; i++) {
 	updateBtns[i].addEventListener('click', function(){
 		var productId = this.dataset.product
 		var action = this.dataset.action
-		console.log('productId:', productId, 'Action:', action)
-		console.log('USER:', user)
+		// console.log('productId:', productId, 'Action:', action)
+		// console.log('USER:', user)
 
-		if (user == 'AnonymousUser'){
+		if ('{{request.session.id}}'){
 			addCookieItem(productId, action)
 			// console.log('Not logged in')
 		}else{
@@ -18,7 +18,7 @@ for (i = 0; i < updateBtns.length; i++) {
 
 // No loggeado
 function addCookieItem(productId, action){
-	console.log('User is not authenticated')
+	// console.log('User is not authenticated')
 	if (action == 'add'){
 		if (cart[productId] == undefined){
 		cart[productId] = {'quantity':1}
@@ -35,7 +35,7 @@ function addCookieItem(productId, action){
 			delete cart[productId];
 		}
 	}
-	console.log('CART:', cart)
+	// console.log('CART:', cart)
 	document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
 	location.reload()
 	updateUserOrder()
@@ -46,7 +46,7 @@ function addCookieItem(productId, action){
 function updateUserOrder(productId, action){
 	console.log('User is authenticated, sending data...')
 
-		var url = '/update_item/'
+		var url = '/pedidosupdate_item/'
 		// alert(productId)
 		fetch(url, {
 			method:'POST',
