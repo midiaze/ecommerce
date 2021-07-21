@@ -1,0 +1,27 @@
+*{
+    margin:auto;
+}
+
+.container{
+    width:50%;
+}
+
+.header{
+    color: red;
+}
+
+.box{
+    border: 3px solid red;
+    margin: auto;
+}
+.name{
+    color:blue;
+}
+.pedido{
+    width:100%;
+}
+
+.pago{
+    width:25%;
+    margin-left: 400px;
+}

@@ -11,10 +11,11 @@ class ProductoManager(models.Manager):
             errors['precio'] = 'Precio no puede ser cero'
         if len(post_data['descripcion'])<2:
             errors['descripcion'] = 'Descripción debe tener al menos dos caracteres'
-        if int(post_data['stock']) < 0:
-            errors['stock'] = 'Stock no puede ser menor a cero'
-        if int(post_data['min_stock']) < 0:
-            errors['min_stock'] = 'Stock no puede ser menor a cero'
+        if not str(post_data['stock']).isdigit():
+            if post_data['stock']:
+                errors['stock'] = 'Stock no puede ser menor a cero'
+        # if int(post_data['min_stock']) < 0:
+        #     errors['min_stock'] = 'Stock no puede ser menor a cero'
 
         return errors
 
@@ -46,4 +47,4 @@ class Producto(models.Model):
         return self.nombre
 
     class Meta:
-        ordering = ['created_at']
+        ordering = ['nombre']

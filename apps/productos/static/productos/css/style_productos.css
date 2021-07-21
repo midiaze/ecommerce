@@ -1,8 +1,9 @@
 .error-form {
     color: red;
     font-weight: 100;
+    font-size: 16px;
 }
 
 .imagen_editar{
-    width: 50%;
+    width: 500px;
 }
