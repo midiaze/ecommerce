@@ -29,14 +29,14 @@ def registro(request):
     context = {
         'formulario_usuario' : formulario,
     }
-    return render(request, "index_usuarios.html", context)
+    return render(request, "usuarios/registro.html", context)
 
 def login(request):
     if request.method == "GET":
         context = {
             'login': True
         }
-        return render(request,"index_usuarios.html", context)
+        return render(request,"usuarios/login.html", context)
     if request.method == "POST":
         errors = Usuario.objects.validar_ingreso(request.POST)
         if len(errors)>0:
