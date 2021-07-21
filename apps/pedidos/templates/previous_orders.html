@@ -1,0 +1,26 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+<p>Estos son tus pedidos:</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th><strong>Order Nº</strong></th>
+            <th><strong>Total</strong></th>
+            <th class='text-center'>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {% for order in orders %}
+            <th scope="row"><a href="#">{{order.id}}</a></th>
+            <td>${{order.get_cart_total}}</td>
+            <td class='text-center'> <a class='btn btn-primary' href="#">View Voucher</a> <a class='btn btn-success'
+                    href="#">Dowload
+                    Voucher</a> </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+{% endblock content %}
