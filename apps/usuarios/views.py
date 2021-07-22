@@ -53,6 +53,7 @@ def login(request):
         else:
             usuario = Usuario.objects.get(email=request.POST['email'])
             request.session["id"]=usuario.id
+            
             if not usuario.super_user:
                 context = {
                     'usuario': usuario,
