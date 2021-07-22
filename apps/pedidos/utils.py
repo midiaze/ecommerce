@@ -8,18 +8,15 @@ from .models import *
 def cookieCart(request):
 	try:
 		cart = json.loads(request.COOKIES['cart'])
-		# print('Hola')
 	except:
 		cart={}
 		print('Chao')
-	# print('Cart:', cart)
 	items = []
 	order = {
 		'get_cart_total':0, 
 		'get_cart_items':0, 
 		} 
 	cartItems = order['get_cart_items']
-
 	for i in cart:	
 		try:
 			cartItems += cart[i]['quantity']
@@ -45,16 +42,12 @@ def cookieCart(request):
 		except:
 			pass
 	print(cart)
+	print('Chao mundo')
 	return {'cartItems':cartItems, 'order':order, 'items':items}
 
 
 def cartData(request):
-	# if 'id' in request.session:
-	# 	usuario = Usuario.objects.get(id=request.session['id'])
 	order = cookieCart(request)
-		# items= order.orderitem_set.all()
-		# cartItems = order.get_cart_items()
-	# else:
 	cookieData = cookieCart(request)
 	cartItems = cookieData['cartItems']
 	order = cookieData['order']
