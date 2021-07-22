@@ -26,7 +26,7 @@ def registro(request):
             nuevo.save()
             request.session["id"]=nuevo.id
             if nuevo.id == 1:
-                return redirect("usuarios:restaurante")
+                return redirect("reportes:index")
             return redirect("usuarios:dashboard",id_usuario=nuevo.id) #esta redirecciona cuando entra después de registrarse un cliente
     else:
         formulario = UsuarioForm()
@@ -59,7 +59,7 @@ def login(request):
                 }
                 return redirect("usuarios:dashboard",id_usuario=usuario.id) #esta redirecciona cuando entra después de login un cliente
             if usuario.super_user:
-                return redirect("usuarios:restaurante")
+                return redirect("reportes:index")
 
 def logout(request):
     request.session.clear()
@@ -159,4 +159,4 @@ def restaurante(request):
     context = {
         'usuario': usuario
     }
-    return render(request, "restaurante/dashboard.html", context) # redirect a la que tenga la tere de reportes
+    return redirect("reportes:index",id_usuario=usuario.id)
