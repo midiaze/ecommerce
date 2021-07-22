@@ -10,6 +10,7 @@ from django.conf import settings
 #from weasyprint import HTML
 from apps.utils import login_required
 
+
 def store(request):
     products = Producto.objects.all()
     if 'id' in request.session:
@@ -62,8 +63,8 @@ def updateItem(request):
 	data = json.loads(request.body)
 	productId = data['productId']
 	action = data['action']
-	print('Action:', action)
-	print('Product:', productId)
+	# print('Action:', action)
+	# print('Product:', productId)
 
 	usuario = Usuario.objects.get(id=request.session['id'])
 	product = Producto.objects.get(id=productId)
@@ -83,23 +84,45 @@ def updateItem(request):
 
 	return JsonResponse('Item was added', safe=False)
 
-@csrf_exempt
+
 def processOrder(request):
-    transaction_id = datetime.datetime.now().timestamp()
-    data = json.loads(request.body)
+    if request.method == 'POST':
 
-    if 'id' in request.session:
-        usuario = Usuario.objects.get(id=request.session['id'])
-        order, created = Order.objects.get_or_create(usuario=usuario, complete = False)  
-        total = (data['form']['total'])
-        order.transaction_id = transaction_id
-        if total == (order.get_cart_total()):
-            order.complete = True
-        else: 
-            return JsonResponse('error', safe=False)
-        order.save()
+        transaction_id = datetime.datetime.now().timestamp()
+        # data = json.loads(request.body)
 
-        return JsonResponse('Payment complete', safe=False)        
+        if 'id' in request.session:
+            usuario = Usuario.objects.get(id=request.session['id'])
+            data = cartData(request)
+            cartItems = data['cartItems']
+            order1 = data['order']
+            items = data['items']
+            print('-'*60)
+            print(cartItems)
+            print(order1['get_cart_total'])
+            print(items)
+            print('-'*60)
+            order = Order.objects.create(usuario=usuario, complete = True, order_total=order1['get_cart_total'])
+            for item in items:
+                product = Producto.objects.get(id=item['product']['id'])
+                OrderItem.objects.create(product=product, order=order, quantity=item['quantity'])
+            # total = (data['form']['total'])
+            # order.transaction_id = transaction_id
+            # if total == (order.get_cart_total()):
+            #     order.complete = True
+            # else: 
+            #     return JsonResponse('error', safe=False)
+            # order.save()
+            request.session['complete']='Eliminar'
+
+            # return JsonResponse('Payment complete', safe=False)       
+    return redirect ('pedidos:store')
+
+def eliminar(request):
+    if request.method == 'GET':
+        request.session['complete'] = ''
+    return redirect('pedidos:store')
+
 
 def previous_orders(request):
     data = cartData(request)
@@ -136,6 +159,8 @@ def order_details(request, order_id):
     }
     return render(request, 'store/order_details.html', context)
 
+
+
 # def boleta(request, pedido_id):
 #     pedido = Pedido.objects.get(id=pedido_id)
 #     context={            
@@ -148,5 +173,6 @@ def order_details(request, order_id):
 #     pdf_url = os.path.join(settings.BASE_DIR, 'static/pdf/'+nombreArchivo)
 #     HTML(string = html_template).write_pdf(target=f'{pdf_url}.pdf')
 #     return render(request, 'paginas/boleta.html', context)
+
 
 

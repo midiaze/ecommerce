@@ -53,6 +53,15 @@
         return null;
     }
 
+    if ('{{request.session.complete}}' === 'Eliminar') {
+        cart = {}
+        document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+        window.location.href = "{% url 'pedidos:eliminar' %}";
+    }
+    console.log('{{request.session.complete}}')
+
+
+
     var cart = JSON.parse(getCookie('cart'))
 
     if (cart == undefined) {
@@ -82,7 +91,7 @@
             </ul>
             <div class="form-inline my-2 my-lg-0">
                 {% if 'id' in request.session %}
-                <a href="/usuarioslogout/" class="btn btn-danger">Logout</a>
+                <a href="/usuarioslogout" class="btn btn-danger">Logout</a>
                 {% else %}
                 <a href="/usuarioslogin" class="btn btn-warning">Login</a>
                 {% endif %}
