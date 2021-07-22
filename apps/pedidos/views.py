@@ -127,18 +127,19 @@ def eliminar(request):
 def previous_orders(request):
     data = cartData(request)
     cartItems = data['cartItems']
-    if 'id' in request.session:
-        usuario = Usuario.objects.get(id=request.session['id'])
-        print(usuario.id)
-        orders = Order.objects.filter(usuario=usuario)
-        # if len(orders) == 0:
-        #     return redirect('/pedidosnone')
-        # else:
-        context = {
-            'orders':orders,
-            'cartItems':cartItems
-        }
-        return render(request, 'store/previous_orders.html', context)
+    if request.method == 'GET':
+        if 'id' in request.session:
+            usuario = Usuario.objects.get(id=request.session['id'])
+            print(usuario.id)
+            orders = Order.objects.filter(usuario=usuario)
+            if len(orders) == 0:
+                return redirect('/pedidosnone')
+            else:
+                context = {
+                    'orders':orders,
+                    'cartItems':cartItems
+                }
+                return render(request, 'store/previous_orders.html', context)
 
 def none(request):
     data = cartData(request)

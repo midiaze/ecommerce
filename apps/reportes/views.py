@@ -47,7 +47,7 @@ def index(request):
         #demanda
         'demanda_hoy': Order.objects.filter(date_ordered__range=[first_week, last_week]).values('date_ordered').annotate(sum=Sum('order_total')),
         'demanda_pasada': Order.objects.filter(date_ordered__range=[date_ago_start, date_ago_end]).values('date_ordered').annotate(sum=Sum('order_total')),
-        'customers' :Order.objects.filter(date_ordered__year=2021).values('customer_id').annotate(order_total = Count('customer_id')),
+        'customers' :Order.objects.filter(date_ordered__year=2021).values('usuario_id').annotate(order_total = Count('usuario_id')),
 
         #stock
         'stock' : Producto.objects.all().order_by('stock'),

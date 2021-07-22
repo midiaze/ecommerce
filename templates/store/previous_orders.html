@@ -5,8 +5,9 @@
 <table class="table">
     <thead>
         <tr>
-            <th><strong>Order Nº</strong></th>
+            <th><strong>Orden Nº</strong></th>
             <th><strong>Total</strong></th>
+            <th><strong>Fecha</strong></th>
             <th class='text-center'>Actions</th>
         </tr>
     </thead>
@@ -14,7 +15,8 @@
         <tr>
             {% for order in orders %}
             <th scope="row">{{order.id}}</a></th>
-            <td>${{order.get_cart_total}}</td>
+            <td>${{order.order_total}}</td>
+            <td>{{order.date_ordered|date:'D d M Y'}}</td>
             <td class='text-center'><a class='btn btn-primary' href="/pedidosorder_details/{{order.id}}">View Order</a>
                 <a class='btn btn-success' href="#">Dowload
                     Voucher</a> </td>

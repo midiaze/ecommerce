@@ -2,54 +2,57 @@
 {% load static %}
 
 {% block extraEstilos %}
-    <link rel="stylesheet" href="{% static 'master/css/styles_c.css' %}" />
+<link rel="stylesheet" href="{% static 'master/css/styles_c.css' %}" />
 {% endblock %}
 
 
 {% block extraScripts %}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}
 
 {% block contenido %}
 
-    <body background="{% static 'master/assets/img/fondopizza.jpg' %}">
+<body background="{% static 'master/assets/img/fondopizza.jpg' %}">
     <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom">
-            <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="#!">Dojos Pizza</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-                        {% if usuario %}
-                            <li><a href="{% url 'usuarios:logout' %}" class="btn btn-danger">Cerrar Sesión</a></li>
-                            <li><a href="{% url 'usuarios:perfil' id_usuario=usuario.id %}" class="btn btn-warning ms-3">Mi perfil</a></li>                            
-                        {% else %}
-                            <li class="nav-item active"><a class="nav-link" href="{% url 'usuarios:registro'%}">Crear usuario</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'usuarios:login'%}">Ingresar</a></li>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="{% url 'pedidos:store' %}">Dojos Pizza</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    {% if usuario %}
+                    <li><a href="{% url 'usuarios:logout' %}" class="btn btn-danger">Cerrar Sesión</a></li>
+                    <li><a href="{% url 'usuarios:perfil' id_usuario=usuario.id %}" class="btn btn-warning ms-3">Mi
+                            perfil</a></li>
+                    {% else %}
+                    <li class="nav-item active"><a class="nav-link" href="{% url 'usuarios:registro'%}">Crear
+                            usuario</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'usuarios:login'%}">Ingresar</a></li>
 
-                        {% endif %}
-                    </ul>
-                </div>
-                <div>
-                    {% if usuario %} <h3 class="navbar-brand" >Hola {{usuario.nombre}}! </h3>{% endif %}
-                    
-                </div>
+                    {% endif %}
+                </ul>
             </div>
-        </nav>
+            <div>
+                {% if usuario %} <h3 class="navbar-brand">Hola {{usuario.nombre}}! </h3>{% endif %}
+
+            </div>
+        </div>
+    </nav>
     <!-- Page Content-->
-        <section>
-            <div class="container px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5">
-                    <div class="col-lg-6">
-                        <h1 class="mt-5"></h1>
-                        <p></p>
-                    </div>
+    <section>
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5">
+                <div class="col-lg-6">
+                    <h1 class="mt-5"></h1>
+                    <p></p>
                 </div>
             </div>
-        </section>
-    
-  </body>
+        </div>
+    </section>
+
+</body>
 
 {% endblock %}
