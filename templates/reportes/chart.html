@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}
+    Dashboard
+{% endblock %}
+
+{% block menuVertical %}
+    {% include 'left-menu.html' %}
+{% endblock %}
+
+{% block contenido %}
+{% block extraEstilos %} 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.4.1/chart.min.js" integrity="sha512-5vwN8yor2fFT9pgPS9p9R7AszYaNn0LkQElTXIsZFCL7ucT8zDCAqlQXDdaqgA1mZP47hdvztBMsIoFxq/FyyQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+{% endblock %}
+            <div class="main-content">
+                <h3>Esta semana: ${{ventas_semanales_agregadas}}</h3>
+                <div class="row-s">
+                    <div class="col-s">
+                        <canvas id="ventas" width="100" height="100"></canvas>
+                        <script>
+                            var ctx1 = document.getElementById('ventas');
+                            var myChart = new Chart(ctx1, {
+                                type: 'bar',
+                                data: {
+                                    labels: [{% for order in ventas_semanales %}'{{order.date_ordered | date:"D" }}',{% endfor %}],
+                                    datasets: [{
+                                        label: 'Ventas diarias',
+                                        data: [{% for order in ventas_semanales %}{{order.sales}},{% endfor %}],
+                                        backgroundColor: ['rgba(54, 162, 235, 0.2)'],
+                                        borderColor: ['rgba(54, 162, 235, 1)'],
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        </script>
+                    </div>
+                    <div class="col-s">
+                        <canvas id="pedido-semanal" width="100" height="100"></canvas>
+                        <script>
+                            var pedidos_semanal = document.getElementById('pedido-semanal');
+                            var myChart = new Chart(pedidos_semanal, {
+                                type: 'bar',
+                                data: {
+                                    labels: [{% for order in pedidos_semanales %}'{{order.date_ordered | date:"D" }}',{% endfor %}],
+                                    datasets: [{
+                                        label: 'Pedidos Diarios',
+                                        data: [{% for order in pedidos_semanales %}{{order.total_orders}},{% endfor %}],
+                                        backgroundColor: ['rgba(54, 162, 235, 0.2)'],
+                                        borderColor: ['rgba(54, 162, 235, 1)'],
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        </script>
+                    </div>
+                </div>
+                <h3>Este año: ${{ventas_anuales_agregadas}}</h3>
+                <div class="row-s">
+                    <div class="col-s">
+                        <canvas id="ventas-mensuales" width="100" height="100"></canvas>
+                        <script>
+                            var ventas_mensuales = document.getElementById('ventas-mensuales');
+                            var myChart = new Chart(ventas_mensuales, {
+                                type: 'line',
+                                data: {
+                                    labels: [{% for order in ventas %}'{{order.date_ordered__month }}',{% endfor %}],
+                                    datasets: [{
+                                        label: 'Ventas mensuales',
+                                        data: [{% for order in ventas %}{{order.total_sales}},{% endfor %}],
+                                        backgroundColor: [
+                                            'rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                        'rgba(75, 192, 192, 0.2)',
+                                        'rgba(153, 102, 255, 0.2)',
+                                        'rgba(255, 159, 64, 0.2)'
+                                    ],
+                                    borderColor: [
+                                        'rgba(255, 99, 132, 1)',
+                                        'rgba(54, 162, 235, 1)',
+                                        'rgba(255, 206, 86, 1)',
+                                        'rgba(75, 192, 192, 1)',
+                                        'rgba(153, 102, 255, 1)',
+                                        'rgba(255, 159, 64, 1)'
+                                    ],
+                                    borderWidth: 1
+                                }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        </script>
+                    </div>
+                    <div class="col-s">
+                        <canvas id="productos-vendidos" width="100" height="100"></canvas>
+                        <script>
+                            var productos_vendidos = document.getElementById('productos-vendidos');
+                            var myChart = new Chart(productos_vendidos, {
+                                type: 'bar',
+                                data: {
+                                    labels: [{% for producto in productos_vendidos %}'{{producto.product_id}}',{% endfor %}],
+                                    datasets: [{
+                                        label: 'Productos más vendidos',
+                                        data: [{% for producto in productos_vendidos %}{{producto.total_quantity}},{% endfor %}],
+                                        backgroundColor: [
+                                            'rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                        'rgba(153, 102, 255, 0.2)',
+                                        'rgba(255, 159, 64, 0.2)'
+                                    ],
+                                    borderColor: [
+                                        'rgba(255, 99, 132, 1)',
+                                        'rgba(54, 162, 235, 1)',
+                                        'rgba(255, 206, 86, 1)',
+                                        'rgba(75, 192, 192, 1)',
+                                        'rgba(153, 102, 255, 1)',
+                                        'rgba(255, 159, 64, 1)'
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                        </script>
+                    </div>
+                    <div class="col-s">
+                        <canvas id="pedidos-anuales" width="100" height="100"></canvas>
+                        <script>
+                            var pedidos_anuales = document.getElementById('pedidos-anuales');
+                            var myChart = new Chart(pedidos_anuales, {
+                                type: 'bar',
+                                data: {
+                                    labels: [{% for pedido in pedidos_anuales %}'{{pedido.date_ordered__month }}',{% endfor %}],
+                                    datasets: [{
+                                        label: 'Pedidos anuales',
+                                        data: [{% for pedido in pedidos_anuales %}{{pedido.total_orders}},{% endfor %}],
+                                        backgroundColor: ['rgba(54, 162, 235, 0.2)'],
+                                    borderColor: ['rgba(54, 162, 235, 1)'],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                        </script>
+                    </div>
+                </div>
+                <h3>Demanda</h3>
+                <div class="row-s">
+                        <div class="col-s">
+                            <canvas id="horarios" width="100" height="100"></canvas>
+                            <script>
+                                var ctx5 = document.getElementById('horarios');
+                                var horarios = new Chart(ctx5, {
+                                    type: 'radar',
+                                    data: {
+                                        labels: [{% for compra in demanda_hoy %}'{{compra.date_ordered | date:"D" }}',{% endfor %}],
+                                        datasets: [{
+                                            label: 'Ventas semanales año presente',
+                                            data: [{% for compra in demanda_hoy %}{{compra.sum}},{% endfor %}],
+                                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                        borderColor: 'rgba(255, 99, 132, 1)',
+                                        borderWidth: 1
+                                    }, {
+                                        label: 'Ventas semanales año pasado',
+                                        data: [{% for compra in demanda_pasada %}{{compra.sum}},{% endfor %}],
+                                        backgroundColor:'rgba(40, 22, 132, 0.3)',
+                                        borderColor: 'rgba(40, 22, 132, 1)',
+                                            borderWidth: 1
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                            </script>
+                        </div>
+                        <div class="col-s">
+                            <canvas id="customers" width="100" height="100"></canvas>
+                            <script>
+                                var customers = document.getElementById('customers');
+                                var customers = new Chart(customers, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: [{% for customer in customers %}'{{customer.customer_id}}',{% endfor %}],
+                                    datasets: [{
+                                        label: 'Mejores Clientes',
+                                        data: [{% for customer in customers %}{{customer.order_total}},{% endfor %}],
+                                        backgroundColor: [
+                                            'rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                        ],
+                                        borderColor: [
+                                            'rgba(255, 99, 132, 1)',
+                                            'rgba(54, 162, 235, 1)',
+                                            'rgba(255, 206, 86, 1)',
+                                            'rgba(75, 192, 192, 1)',
+                                            'rgba(153, 102, 255, 1)',
+                                            'rgba(255, 159, 64, 1)'
+                                        ],
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                            </script>
+                        </div>
+                </div>
+                <h3>Stock de Productos</h3>
+                <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th class="th-sm">Id</th>
+                        <th class="th-sm">Producto</th>
+                        <th class="th-sm">Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for producto in stock %}
+                        <tr>
+                            <td>{{producto.id}}</td>
+                            <td>{{producto.nombre}}</td>
+                            <td>{{producto.stock}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</nav>
+{% endblock %}
