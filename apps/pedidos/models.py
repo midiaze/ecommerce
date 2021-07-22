@@ -20,12 +20,6 @@ class Order(models.Model):
     transaction_id = models.CharField(max_length=200, null=True)
     order_total = models.PositiveIntegerField(null=True)
 
-    # def save(self, *args, **kwargs):
-    #     orderitems = self.orderitem_set.all()
-    #     self.order_total = sum([item.get_total for item in orderitems])
-    #     super().save(*args, **kwargs)
-
-
     def __str__(self):
         return str(self.id)
 

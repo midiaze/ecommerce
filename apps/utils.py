@@ -20,5 +20,4 @@ def login_dashboard(view):
             raise PermissionDenied()
         else:
             return view(request, id_usuario)
-    
     return view_envuelta
