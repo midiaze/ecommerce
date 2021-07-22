@@ -50,7 +50,7 @@ def cookieCart(request):
 
 def cartData(request):
 	# if 'id' in request.session:
-	# customer = Customer.objects.get(id=request.session['id'])
+	# 	usuario = Usuario.objects.get(id=request.session['id'])
 	order = cookieCart(request)
 		# items= order.orderitem_set.all()
 		# cartItems = order.get_cart_items()
@@ -59,35 +59,49 @@ def cartData(request):
 	cartItems = cookieData['cartItems']
 	order = cookieData['order']
 	items = cookieData['items']
-	
 	return {'cartItems':cartItems,'order':order, 'items':items}
+
+#------------------------------------------------------------------------------------------------------------
+	# if 'id' in request.session:
+	# customer = Customer.objects.get(id=request.session['id'])
+	# order = cookieCart(request)
+	# 	items= order.orderitem_set.all()
+	# 	cartItems = order.get_cart_items()
+	# else:
+	# cookieData = cookieCart(request)
+	# cartItems = cookieData['cartItems']
+	# order = cookieData['order']
+	# items = cookieData['items']
+	
+	# return {'cartItems':cartItems,'order':order, 'items':items}
+	
 	
 
 	
-def guestOrder(request, data):
-	print('user is not logged in ...')
-	print ('COOKIES:', request.COOKIES)
-	name=data['form']['name']
-	email = data['form']['email']
-	cookieData = cookieCart(request)
-	items = cookieData['items']
-	customer, created = Customer.objects.get_or_create(
-		email=email,
-	)
+# def guestOrder(request, data):
+# 	print('user is not logged in ...')
+# 	print ('COOKIES:', request.COOKIES)
+# 	name=data['form']['name']
+# 	email = data['form']['email']
+# 	cookieData = cookieCart(request)
+# 	items = cookieData['items']
+# 	customer, created = Customer.objects.get_or_create(
+# 		email=email,
+# 	)
 	
-	customer.name = name
-	customer.save()
+# 	customer.name = name
+# 	customer.save()
 
-	order = Order.objects.create(
-		customer = customer,
-		complete=False,
-	)
-	for item in items:
-		product= Producto.objects.get(id=item['product']['id'])
+# 	order = Order.objects.create(
+# 		customer = customer,
+# 		complete=False,
+# 	)
+# 	for item in items:
+# 		product= Producto.objects.get(id=item['product']['id'])
 
-		orderItem=OrderItem.objects.create(
-			product=product,
-			order=order,
-			quantity=item['quantity']
-		)
-	return customer, order
+# 		orderItem=OrderItem.objects.create(
+# 			product=product,
+# 			order=order,
+# 			quantity=item['quantity']
+# 		)
+# 	return customer, order

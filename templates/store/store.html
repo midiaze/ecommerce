@@ -12,9 +12,10 @@
                 <h6 class='mt-1'><strong>{{product.nombre}}</strong></h6>
                 <hr>
                 <h6>{{product.descripcion}}</h6>
-
+                {% if 'id' in request.session %}
                 <button data-product={{product.id}} data-action='add'
                     class="btn btn-outline-secondary add-btn update-cart ">Add to Cart</button>
+                {% endif %}
                 <a class="btn btn-outline-success" href="#">View</a>
                 <span class='float-right'>
                     <h4 style="display: inline-block;">${{product.precio}}</h4>

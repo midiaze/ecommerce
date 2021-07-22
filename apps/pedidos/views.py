@@ -3,24 +3,28 @@ from django.http import JsonResponse
 import json
 import datetime
 from .models import * 
-from .utils import cookieCart, cartData, guestOrder
+from .utils import cookieCart, cartData
 from django.views.decorators.csrf import csrf_exempt
 import os
 from django.conf import settings
 
 def store(request):
-    data = cartData(request)
-    cartItems = data['cartItems']
     products = Producto.objects.all()
-    context = {
-        'products': products,
-        'cartItems':cartItems,
-    }
     if 'id' in request.session:
-        user=Customer.objects.get(id=request.session['id'])
-        context['customer']=user
-    return render(request, 'store/store.html', context)
-
+        data = cartData(request)
+        usuario =Usuario.objects.get(id=request.session['id'])
+        cartItems = data['cartItems']
+        context = {
+            'products': products,
+            'cartItems':cartItems,
+        }
+        return render(request, 'store/store.html', context)
+    else:
+        context = {
+            'products':products
+        }
+        return render(request, 'store/store.html', context)
+        
 
 def cart(request):
 
@@ -56,12 +60,12 @@ def updateItem(request):
 	data = json.loads(request.body)
 	productId = data['productId']
 	action = data['action']
-	# print('Action:', action)
-	# print('Product:', productId)
+	print('Action:', action)
+	print('Product:', productId)
 
-	customer = Customer.objects.get(id=request.session['id'])
+	usuario = Usuario.objects.get(id=request.session['id'])
 	product = Producto.objects.get(id=productId)
-	order, created = Order.objects.get_or_create(customer=customer, complete=False)
+	order, created = Order.objects.get_or_create(usuario=usuario, complete=False)
 
 	orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
 
@@ -77,37 +81,31 @@ def updateItem(request):
 
 	return JsonResponse('Item was added', safe=False)
 
-
 @csrf_exempt
 def processOrder(request):
     transaction_id = datetime.datetime.now().timestamp()
     data = json.loads(request.body)
 
     if 'id' in request.session:
-        customer = Customer.objects.get(id=request.session['id'])
-        order, created = Order.objects.get_or_create(customer=customer, complete = False)
-    
-    else: 
-        customer, order = guestOrder(request, data)
-    
-    total = (data['form']['total'])
-    order.transaction_id = transaction_id
-    if total == (order.get_cart_total()):
-        order.complete = True
-    else: 
-        return JsonResponse('error', safe=False)
-    order.save()
-    
-    
-    return JsonResponse('Payment complete', safe=False)        
+        usuario = Usuario.objects.get(id=request.session['id'])
+        order, created = Order.objects.get_or_create(usuario=usuario, complete = False)  
+        total = (data['form']['total'])
+        order.transaction_id = transaction_id
+        if total == (order.get_cart_total()):
+            order.complete = True
+        else: 
+            return JsonResponse('error', safe=False)
+        order.save()
+
+        return JsonResponse('Payment complete', safe=False)        
 
 def previous_orders(request):
     data = cartData(request)
     cartItems = data['cartItems']
     if 'id' in request.session:
-        customer = Customer.objects.get(id=request.session['id'])
-        print(customer.id)
-        orders = Order.objects.filter(customer=customer)
+        usuario = Usuario.objects.get(id=request.session['id'])
+        print(usuario.id)
+        orders = Order.objects.filter(usuario=usuario)
         # if len(orders) == 0:
         #     return redirect('/pedidosnone')
         # else:
