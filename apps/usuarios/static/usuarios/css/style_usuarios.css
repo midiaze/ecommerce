@@ -1,0 +1,18 @@
+.error-form {
+    color: red;
+    font-weight: 100;
+}
+
+
+
+.mt-10{
+    margin-top: 5%;
+}
+
+.bordeado{
+    margin-top: 5%;
+    border: 5px solid white;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.25);
+    padding: 2%;
+}

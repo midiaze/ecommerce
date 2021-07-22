@@ -7,6 +7,8 @@ from .utils import cookieCart, cartData
 from django.views.decorators.csrf import csrf_exempt
 import os
 from django.conf import settings
+#from weasyprint import HTML
+from apps.utils import login_required
 
 def store(request):
     products = Producto.objects.all()

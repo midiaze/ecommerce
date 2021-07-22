@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extraEstilos %}
+    <link rel="stylesheet" href="{% static 'usuarios/css/style_usuarios.css' %}" />
+{% endblock %}
+
+{% block extraScripts %}
+    <script src="{% static 'usuarios/js/java.js' %}"></script>
+{% endblock %}
+
+{% block menuVertical %}
+    {% include 'left-menu.html' %}
+{% endblock %}
+{% block contenido %}
+            <div class="main-content">
+
+                {% if perfil %}
+                    <form action="" method="POST" class="mt-3">
+                        {% csrf_token %}
+                        <table class="table table-borderless tabla_usuarios_editar">
+                            <tr>
+                                <td>
+                                    <label class="col-form-label">Nombre:</label>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control  {% if errors.nombre %} is-invalid {% endif %}" name="nombre" value="{{ usuario.nombre }}">
+                                </td>
+                                <td>
+                                    {% if errors.nombre %}
+                                    <span class="form-text error-form">{{ errors.nombre }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="col-form-label">Dirección:</label>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control  {% if errors.direccion %} is-invalid {% endif %}" name="direccion" value="{{ usuario.direccion }}">
+                                </td>
+                                <td>
+                                    {% if errors.direccion %}
+                                    <span class="form-text error-form">{{ errors.direccion }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="col-form-label">Email:</label>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control  {% if errors.email %} is-invalid {% endif %}" name="email" value="{{ usuario.email }}">
+                                </td>
+                                <td>
+                                    {% if errors.email %}
+                                    <span class="form-text error-form">{{ errors.email }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                        <button class="btn btn-success">Guardar cambios</button>
+                    </form>
+                
+                    <div class="m-4 d-flex justify-content-around tabla_usuarios_editar">
+                        <a href="{% url 'usuarios:cambiar_pw' id_usuario=usuario.id %}" class="btn btn-info">Cambiar Contraseña</a>
+                        <a class="btn btn-dark" onclick="establecer_eliminar_id({{usuario.id}})" data-bs-toggle="modal" data-bs-target="#exampleModal">Eliminar cuenta</a>
+                    </div>
+                {% endif %}
+
+
+                {% if cambio_pw %}
+
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="row g-3 align-items-center m-2">
+                            <div class="col-auto">
+                                <label for="inputPassword6" class="col-form-label">Contraseña actual:</label>
+                            </div>
+                            <div class="col-auto">
+                                <input name="password" type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+                            </div>
+                        </div>
+                        <div class="row g-3 align-items-center m-2">
+                            <div class="col-auto">
+                                <label for="inputPassword6" class="col-form-label">Nueva contraseña:</label>
+                            </div>
+                            <div class="col-auto">
+                                <input name="nueva_pw" type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+                            </div>
+                            <div class="col-auto">
+                                <span id="passwordHelpInline" class="form-text">
+                                Contraseña debe tener al menos 6 caracteres.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row g-3 align-items-center m-2">
+                            <div class="col-auto">
+                                <label for="inputPassword6" class="col-form-label">Confirmar contraseña:</label>
+                            </div>
+                            <div class="col-auto">
+                                <input name="confirm_nueva_pw" type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+                            </div>
+                        </div>
+                        <button class="btn btn-info m-3">Cambiar contraseña</button>
+                        {% if errors.cambio_pw %}
+                            <p class="error-form">{{errors.cambio_pw}}</p>
+                        {% endif %}
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> Seguro que quieres eliminar tu cuenta? </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"> Cerrar</button>
+                <button onclick="eliminar()" type="button" class="btn btn-outline-danger">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

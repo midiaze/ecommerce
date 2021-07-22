@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block extraEstilos %}
+    <link rel="stylesheet" href="{% static 'productos/css/style_productos.css' %}" />
+
+{% endblock %}
+
+{% block extraScripts %}
+    <script src="{% static 'productos/js/java.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable div").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block menuVertical %}
+    {% include 'left-menu.html' %}
+{% endblock %}
+{% block contenido %}
+            <div class="main-content">
+                {% if formulario_categoria %}
+                    <h3>Crear Categoria</h3>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {{ formulario_categoria|crispy }}
+                        <button class="btn btn-info mt-3">Crear</button>
+                    </form>
+                    <h4 class="mt-5">Categorías creadas:</h4>
+                    <ol>
+                    {% for categoria in categorias %}
+                        <li>{{categoria}}</li>
+                    {% endfor %}
+                    </ol>
+                {% endif %}
+
+                {% if formulario_producto %}
+                    <div class="d-flex flex-row justify-content-between mt-3">
+                        <h3>Crear Producto</h3>
+                        <div>
+                            <a href="{% url 'productos:crear_categoria' %}" class="btn btn-outline-primary">Crear Categoria</a>
+                            <a href="{% url 'productos:carga_masiva' %}" class="btn btn-secondary">Carga masiva</a>
+                        </div>
+                    </div>
+                    <form action="" enctype="multipart/form-data" method="POST">
+                        {% csrf_token %}
+                        {{ formulario_producto|crispy }}
+                        <button class="btn btn-info mt-3">Crear</button>
+                    </form>
+                {% endif %}
+
+
+                {% if productos %}
+                    <div class="container">
+                        <a href="{% url 'productos:crear_categoria' %}" class="btn btn-outline-secondary">Crear Categoria</a>
+                        <a href="{% url 'productos:crear_producto' %}" class="btn btn-outline-warning">Crear Producto</a>
+                        <div class="d-flex flex-row justify-content-between align-items-center">
+                            <h1>Productos creados:</h1>
+                            <h6 class="text-secondary"> <input class="form-control" id="myInput" type="text" placeholder="Buscar producto"></h6>
+
+                        </div>
+                        <div id="myTable" class="d-flex flex-wrap">
+                        {% for producto in productos %}
+
+                                <div class="card m-2" style="width: 18rem;">
+                                    <img src="/media/{{producto.imagen}}" class="card-img-top" >
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{producto.nombre}}</h5>
+                                        <p class="card-text">{{producto.descripcion}}</p>
+                                        <h5 class="card-title">$ {{producto.precio|intcomma}}</h5>
+                                        <a href="{% url 'productos:editar_producto' id_producto=producto.id %}" class="btn btn-primary">Editar</a>
+                                    </div>
+                                </div>
+                        
+                        {% endfor %}
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+                {% if editar %}
+                    <div class="container my-4 d-flex flex-row">
+                        <div class="imagen_editar">
+                            <img src="/media/{{producto.imagen}}" class="imagen_editar" alt="">
+                        </div>
+                        <div class="ms-5">
+                            <form action="" enctype="multipart/form-data"  method="POST">
+                            {% csrf_token %}
+
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label class="col-form-label">Nombre:</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control  {% if errors.nombre %} is-invalid {% endif %}" name="nombre" value="{{ producto.nombre }}">
+                                    </td>
+                                    <td>
+                                        {% if errors.nombre %}
+                                        <span class="form-text error-form">{{ errors.nombre }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="col-form-label">Precio:</label>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control  {% if errors.precio %} is-invalid {% endif %}" name="precio" value="{{ producto.precio }}">
+                                    </td>
+                                    <td>
+                                        {% if errors.precio %}
+                                        <span class="form-text error-form">{{ errors.precio }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="col-form-label">Descripción:</label>
+                                    </td>
+                                    <td>
+                                        <textarea style="height: 100px" class="form-control  {% if errors.descripcion %} is-invalid {% endif %}" name="descripcion">{{ producto.descripcion }}</textarea>
+                                    </td>
+                                    <td>
+                                        {% if errors.descripcion %}
+                                        <span class="form-text error-form">{{ errors.descripcion }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="col-form-label">Stock:</label>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control  {% if errors.stock %} is-invalid {% endif %}" name="stock" value="{{ producto.stock }}">
+                                    </td>
+                                    <td>
+                                        {% if errors.stock %}
+                                        <span class="form-text error-form">{{ errors.stock }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="col-form-label">Stock mínimo:</label>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control  {% if errors.min_stock %} is-invalid {% endif %}" name="min_stock" value="{{ producto.min_stock }}">
+                                    </td>
+                                    <td>
+                                        {% if errors.min_stock %}
+                                        <span class="form-text error-form">{{ errors.min_stock }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="col-form-label">Categoria:</label>
+                                    </td>
+                                    <td>
+                                        <select class="form-select {% if errors.categoria %} is-invalid {% endif %}" aria-label="Default select example" name="categoria">
+                                            {% for categoria in categorias %}
+                                            <option value="{{categoria.id}}" {% if categoria.id|slugify == producto.categoria.id|slugify %} selected {% endif %}> {{categoria}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        
+                                    </td>
+                                    <td>
+                                        {% if errors.categoria %}
+                                        <span class="form-text error-form">{{ errors.categoria }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="col-form-label">Imagen:</label>
+                                    </td>
+                                    <td>
+                                        <input type="file" name="imagen_nueva">
+                                        
+                                    </td>
+                                    <td>
+                                        
+                                    </td>
+                                </tr>
+                            </table>
+                            <button class="btn btn-success my-3" >Guardar cambios</button>
+                            </form>
+                            <a onclick="establecer_eliminar_producto_id({{producto.id}})" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-dark my-5" >Eliminar producto</a>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if carga_masiva %}
+                    <h1>Carga masiva de productos</h1>
+                    <form action="" enctype="multipart/form-data" method="POST">
+                        {% csrf_token %}
+                        <input type="file" name="archivo">
+                        <button class="btn btn-warning">Cargar archivo</button>
+                    </form>
+                    <p class="error-form">{{errors}}</p>
+                    {% for clave, valor in errors_carga.items %}
+                        <ul>{{clave}} : {{valor}}</ul>
+                    {% endfor %}
+                    <h4>Categorias:</h4>
+                    {% for categoria in categorias %}
+                    <ul>
+                        <li>{{categoria.id}} - {{categoria.nombre}}</li>
+                    </ul>
+                    {% endfor %}
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> Seguro que quieres eliminar el producto? </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"> Cerrar</button>
+                <button onclick="eliminar_producto()" type="button" class="btn btn-outline-danger">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

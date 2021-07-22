@@ -22,8 +22,29 @@ class UsuarioManager(models.Manager):
                 errors['login'] = 'Correo y contraseña no coinciden'
             else:
                 usuario = email_existente[0]
-                if post_data['password'] != usuario.password:
+                if not bcrypt.checkpw(post_data['password'].encode(), usuario.password.encode()):
                     errors['login'] = 'Correo y contraseña no coinciden'
+                if not usuario.es_activo:
+                    errors['login'] = 'Esta cuenta fue eliminada'
+        return errors
+    
+    def validar_editar_usuario(self, post_data):
+        errors = {}
+        if len(post_data['nombre'])<2:
+            errors['nombre'] = 'Nombre debe tener al menos dos caracteres'
+        if len(post_data['direccion'])<2:
+            errors['direccion'] = 'Apellido debe tener al menos dos caracteres'
+        if post_data['email']:
+            if not EMAIL_REGEX.match(post_data['email']):
+                errors['email']= "Email no es válido"
+        return errors
+    
+    def validar_cambio_pw(self, post_data):
+        errors = {}
+        if len(post_data['nueva_pw'])<6:
+            errors['cambio_pw'] = 'Contraseña debe tener al menos 6 caracteres'
+        if post_data['nueva_pw'] != post_data['confirm_nueva_pw']:
+            errors['cambio_pw'] = 'Contraseñas no coinciden'
         return errors
 
 
@@ -40,5 +61,4 @@ class Usuario(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     objects = UsuarioManager()
-
 
