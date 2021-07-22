@@ -53,6 +53,7 @@ def login(request):
         else:
             usuario = Usuario.objects.get(email=request.POST['email'])
             request.session["id"]=usuario.id
+            
             if not usuario.super_user:
                 context = {
                     'usuario': usuario,
@@ -159,4 +160,5 @@ def restaurante(request):
     context = {
         'usuario': usuario
     }
+
     return redirect("reportes:index",id_usuario=usuario.id)

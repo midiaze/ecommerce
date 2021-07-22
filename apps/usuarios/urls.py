@@ -13,6 +13,4 @@ urlpatterns = [
     path("cambiar_pw/<int:id_usuario>", views.cambiar_pw, name="cambiar_pw"),
     path("/inactivar_usuario/<int:id_usuario>", views.inactivar_usuario, name="inactivar_usuario"),
     path("restaurante", views.restaurante, name="restaurante"),
-
-    
 ]

@@ -14,20 +14,20 @@
 {% load humanize %}
 <div class="container">
     {% if index %}
-        <h1>{{index}}</h1>
-        <a href="{% url 'productos:crear_categoria' %}">Crear Categoria</a>
-        <a href="{% url 'productos:crear_producto' %}">Crear Producto</a>
-        <a href="{% url 'productos:listado_productos' %}">Ver Productos</a>
+    <h1>{{index}}</h1>
+    <a href="{% url 'productos:crear_categoria' %}">Crear Categoria</a>
+    <a href="{% url 'productos:crear_producto' %}">Crear Producto</a>
+    <a href="{% url 'productos:listado_productos' %}">Ver Productos</a>
     {% endif %}
 
 
     {% if formulario_categoria %}
-        <h3>Crear Categoria</h3>
-        <form action="" method="POST">
-            {% csrf_token %}
-            {{ formulario_categoria.as_p }}
-            <button class="btn btn-info">Crear</button>
-        </form>
+    <h3>Crear Categoria</h3>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ formulario_categoria.as_p }}
+        <button class="btn btn-info">Crear</button>
+    </form>
     {% endif %}
 
     {% if formulario_producto %}
@@ -44,25 +44,25 @@
 
 
     {% if productos %}
-        <div class="container">
-            <a href="{% url 'productos:crear_categoria' %}" class="btn btn-outline-secondary">Crear Categoria</a>
-            <a href="{% url 'productos:crear_producto' %}" class="btn btn-outline-warning">Crear Producto</a>
-            <h1>Productos creados:</h1>
-            <div class="d-flex flex-wrap">
-            {% for producto in productos %}
+      <div class="container">
+          <a href="{% url 'productos:crear_categoria' %}" class="btn btn-outline-secondary">Crear Categoria</a>
+          <a href="{% url 'productos:crear_producto' %}" class="btn btn-outline-warning">Crear Producto</a>
+          <h1>Productos creados:</h1>
+          <div class="d-flex flex-wrap">
+          {% for producto in productos %}
 
-                    <div class="card m-2" style="width: 18rem;">
-                        <img src="/media/{{producto.imagen}}" class="card-img-top" >
-                        <div class="card-body">
-                            <h5 class="card-title">{{producto.nombre}}</h5>
-                            <p class="card-text">{{producto.descripcion}}</p>
-                            <h5 class="card-title">$ {{producto.precio|intcomma}}</h5>
-                            <a href="{% url 'productos:editar_producto' id_producto=producto.id %}" class="btn btn-primary">Editar</a>
-                        </div>
-                    </div>
-            
-            {% endfor %}
-            </div>
+                  <div class="card m-2" style="width: 18rem;">
+                      <img src="/media/{{producto.imagen}}" class="card-img-top" >
+                      <div class="card-body">
+                          <h5 class="card-title">{{producto.nombre}}</h5>
+                          <p class="card-text">{{producto.descripcion}}</p>
+                          <h5 class="card-title">$ {{producto.precio|intcomma}}</h5>
+                          <a href="{% url 'productos:editar_producto' id_producto=producto.id %}" class="btn btn-primary">Editar</a>
+                      </div>
+                  </div>
+
+          {% endfor %}
+          </div>
 
         </div>
 
