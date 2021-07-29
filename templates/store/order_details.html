@@ -1,4 +1,4 @@
-{% extends 'store/main.html' %}
+{% extends 'store/main.html' %}{% load humanize %}
 {% load static %}
 {% block content %}
 <div class="row">
@@ -52,7 +52,7 @@
                     <p>{{item.product.nombre}}</p>
                 </div>
                 <div style="flex:1">
-                    <p>${{item.product.precio}}</p>
+                    <p>${{item.product.precio|intcomma}}</p>
                 </div>
                 <div style="flex:1">
                     <p class="quantity">{{item.quantity}}</p>

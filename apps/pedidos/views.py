@@ -20,6 +20,7 @@ def store(request):
         context = {
             'products': products,
             'cartItems':cartItems,
+            'usuario':usuario
         }
         return render(request, 'store/store.html', context)
     else:

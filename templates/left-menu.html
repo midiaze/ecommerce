@@ -8,16 +8,15 @@
 <nav>
   <div class="wrapper">
     <div class="header">
-      <h3>Bienvenido {{usuario.nombre}}</h3>
+      <h4>DojosPizza©</h4>
       <div>
+        <b><a style='color:#FF2500;'href="{% url 'pedidos:store' %}">Ver Sitio</a></b>
         <a href="{% url 'usuarios:perfil' id_usuario=usuario.id %}">Configuración</a>
         <a href="{% url 'usuarios:logout' %}">Logout</a>
-        <a href="{% url 'pedidos:store' %}">Ver Sitio</a>
       </div>
     </div>
     <div class="content">
       <div class="menu-left">
-        <p>DOJOS PIZZA</p>
         <li><a href="{% url 'reportes:index' %}">Dashboard</a></li>
         <li><a href="{% url 'productos:crear_producto' %}">Agregar Productos</a></li>
         <li><a href="{% url 'productos:listado_productos' %}">Ver Productos</a></li>

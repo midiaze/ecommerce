@@ -110,7 +110,7 @@ def perfil(request, id_usuario):
             if not usuario.super_user:
                 return redirect("usuarios:dashboard",id_usuario=usuario.id)
             else:
-                return redirect("usuarios:restaurante")
+                return redirect("/reportes")
 
 @login_required
 def cambiar_pw(request, id_usuario):

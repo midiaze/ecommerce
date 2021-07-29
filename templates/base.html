@@ -8,7 +8,7 @@
     <title> {% block titulo %} Ecommerce {% endblock %} </title>
 
     {% block favicon %}
-      <link rel="shortcut icon" href="{% static 'master/img/favicon.ico' %}" type="image/x-icon"/>
+      <link rel="shortcut icon" href="{% static 'master/img/faviconpizza.ico' %}" type="image/x-icon"/>
     {% endblock %}
 
     {% block estilos %}
@@ -19,6 +19,7 @@
       {% endblock %}
 
     {% block extraEstilos %}
+      <link rel="stylesheet" href='{% static 'master/css/style_admin.css' %}'>
     {% endblock %}
 
     {% block scripts %}

@@ -1,29 +1,56 @@
 {% extends 'store/main.html' %}
 {% load static %}
 {% block content %}
-<div class="row">
-    {% for product in products %}
-    <div class="col-lg-4">
-        <div class="box-element product">
-
-            <div class="box-element product">
-                <img src="/media/{{product.imagen}}" class="thumbnail">
-
-                <h6 class='mt-1'><strong>{{product.nombre}}</strong></h6>
-                <hr>
-                <h6>{{product.descripcion}}</h6>
-                {% if 'id' in request.session %}
-                <button data-product={{product.id}} data-action='add'
-                    class="btn btn-outline-secondary add-btn update-cart ">Add to Cart</button>
-                {% endif %}
-                <a class="btn btn-outline-success" href="#">View</a>
-                <span class='float-right'>
-                    <h4 style="display: inline-block;">${{product.precio}}</h4>
-                </span>
-            </div>
-
+{% load humanize %}
+<header class="bg-dark productos">
+  <div class="row">
+  <div class="col">
+      <img src="{% static 'master/assets/img/fondopizza.jpg' %}" width=100%>
+  </div>
+  <div class="col">
+      <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+          <h1 class="display-4 fw-bolder dojospizza">Dojos Pizza</h1>
+          <p class="lead fw-normal text-white-50 mb-0">
+            El secreto esta en la masa..
+          </p>
         </div>
+      </div>
     </div>
-    {% endfor %}
+  </div>
+</header>
+
+<div class="row">
+  {% for product in products %}
+  <div class="col-lg-4">
+    <div class="box-element product">
+      <img src="/media/{{product.imagen}}" class="thumbnail" />
+
+      <h6 class="mt-1"><strong>{{product.nombre}}</strong></h6>
+      <hr />
+      <h6>{{product.descripcion}}</h6>
+      {% if 'id' in request.session %}
+      <button
+        data-product="{{product.id}}"
+        data-action="add"
+        class="btn btn-outline-secondary add-btn update-cart"
+      >
+        Add to Cart
+      </button>
+      {% else %}
+      <a class="btn btn-outline-secondary" href="/usuarioslogin">Add to Cart</a>
+      {% endif %}
+      <span class="float-right">
+        <h4 style="display: inline-block">${{product.precio|intcomma}}</h4>
+      </span>
+    </div>
+  </div>
+  {% endfor %}
 </div>
+    </div>
+    <footer class="py-5 footer bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">DojosPizza &copy;</p>
+      </div>
+    </footer>
 {% endblock content %}
